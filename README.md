@@ -10,7 +10,8 @@
 > детерминированный шум из белого списка, всё остальное смотрит человек.
 
 **Что здесь есть:** код контура, схема ответа, индекс ATT&CK, скрипты обучения и оценки,
-руководство оператора. **Чего нет:** весов и обучающих данных (см. [ниже](#веса-и-данные)).
+руководство оператора. **Веса:** [oleg-vdv/kezekshi-l1 на Hugging Face](https://huggingface.co/oleg-vdv/kezekshi-l1).
+**Чего нет:** обучающих данных (см. [ниже](#веса-и-данные)).
 
 ## Цифры
 
@@ -81,15 +82,20 @@ docs/operations.md   руководство оператора, docs/dataset.md 
 
 ## Запуск
 
-Нужны Python 3 и Ollama с вашей моделью. Сервис работает на стандартной библиотеке.
+Нужны Python 3 и Ollama. Сервис работает на стандартной библиотеке. Веса занимают 4,9 ГБ,
+проверено на Ollama 0.40.14.
 
 ```bash
+# Модель из Hugging Face
+hf download oleg-vdv/kezekshi-l1 --local-dir kezekshi-l1-v6
+(cd kezekshi-l1-v6 && ollama create kezekshi-l1-v6 -f Modelfile)
+
 # Офлайн-проверки без модели
 python eval/test_schema.py
 
 # Контур на примерах из репозитория, без Wazuh
 cd pipeline
-MODEL=<тег вашей модели в Ollama> OLLAMA=http://localhost:11434/api/chat python run.py --dry-run samples/wazuh_alerts.sample.jsonl
+MODEL=kezekshi-l1-v6 OLLAMA=http://localhost:11434/api/chat python run.py --dry-run samples/wazuh_alerts.sample.jsonl
 ```
 
 Подключение к Wazuh, режимы политики и работа службы описаны в
@@ -111,11 +117,12 @@ ollama create kezekshi-l1 -f ../Modelfile
 
 ## Веса и данные
 
-Веса и датасет не опубликованы. Обучающий набор опирается на материалы учебного курса и на
-алерты закрытого стенда, а веса выведены из этого набора. Подробнее и как собрать свой набор –
-[docs/dataset.md](docs/dataset.md). Метрики выше поэтому нельзя воспроизвести из этого
-репозитория.
+Веса v6 (GGUF Q8_0) опубликованы на
+[Hugging Face](https://huggingface.co/oleg-vdv/kezekshi-l1). Датасет не опубликован: он опирается
+на материалы учебного курса и на алерты закрытого стенда. Поэтому модель можно запустить и
+проверить на своих алертах, но метрики выше из открытых файлов не воспроизвести. Подробнее и
+как собрать свой набор – [docs/dataset.md](docs/dataset.md).
 
 ## Лицензия
 
-Код – Apache 2.0, см. [LICENSE](LICENSE). Базовая модель Gemma 4 – Apache 2.0.
+Код и веса – Apache 2.0, см. [LICENSE](LICENSE). Базовая модель Gemma 4 – Apache 2.0.
