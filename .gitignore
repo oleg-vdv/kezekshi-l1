@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+*.gguf
+*.safetensors
+*-lora/
+*-lora-step*/
+*-merged/
+.venv/
+eval/out/
+pipeline/out/
+data/*.jsonl

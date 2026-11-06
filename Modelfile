@@ -1,0 +1,9 @@
+# Создание модели в Ollama из GGUF:
+#   ollama create kezekshi-l1 -f Modelfile
+FROM ./kezekshi-l1-q8_0.gguf
+TEMPLATE {{ .Prompt }}
+RENDERER gemma4
+PARSER gemma4
+PARAMETER temperature 0
+PARAMETER top_k 64
+PARAMETER top_p 0.95
